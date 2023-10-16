@@ -35,8 +35,8 @@ func Get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(valuerows) == 0 {
-		log.Printf("no valuerowы with the requested id")
-		_, err := w.Write([]byte("no valuerow with the requested id"))
+		log.Printf("no valuerows with the requested id")
+		_, err := w.Write([]byte("no valuerows with the requested id"))
 		if err != nil {
 			log.Printf("failed to write the entry to response, err: %s", err)
 		}
@@ -52,7 +52,7 @@ func Get(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(jsonarray)
 	if err != nil {
-		log.Printf("failed to marshal map into json bytes, err: %s", err)
+		log.Printf("failed to marshal interface array into json bytes, err: %s", err)
 		return
 	}
 
