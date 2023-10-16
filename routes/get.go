@@ -11,8 +11,13 @@ import (
 func Get(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
-	var keyrow, valuerow []string
-	var idcolindex int
+	var (
+		keyrow     []string
+		valuerows  [][]string
+		idcolindex int
+		jsonarray  []interface{}
+	)
+
 	jsonmap := make(map[string]string)
 
 	keyrow = types.Records[0]
@@ -25,13 +30,12 @@ func Get(w http.ResponseWriter, r *http.Request) {
 
 	for _, row := range types.Records[1:] {
 		if row[idcolindex] == id {
-			valuerow = row
-			break
+			valuerows = append(valuerows, row)
 		}
 	}
 
-	if len(valuerow) == 0 {
-		log.Printf("no valuerow with the requested id")
+	if len(valuerows) == 0 {
+		log.Printf("no valuerowы with the requested id")
 		_, err := w.Write([]byte("no valuerow with the requested id"))
 		if err != nil {
 			log.Printf("failed to write the entry to response, err: %s", err)
@@ -39,11 +43,14 @@ func Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for i, key := range keyrow {
-		jsonmap[key] = valuerow[i]
+	for _, valuerow := range valuerows {
+		for i, key := range keyrow {
+			jsonmap[key] = valuerow[i]
+		}
+		jsonarray = append(jsonarray, jsonmap)
 	}
 
-	data, err := json.Marshal(jsonmap)
+	data, err := json.Marshal(jsonarray)
 	if err != nil {
 		log.Printf("failed to marshal map into json bytes, err: %s", err)
 		return
