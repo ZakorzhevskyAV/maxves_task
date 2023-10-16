@@ -23,8 +23,6 @@ func Get(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	log.Printf("idcolindex = %s", idcolindex)
-
 	for _, row := range types.Records[1:] {
 		if row[idcolindex] == id {
 			valuerow = row
@@ -32,7 +30,6 @@ func Get(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	log.Printf("valuerow = %s", valuerow)
 	if len(valuerow) == 0 {
 		log.Printf("no valuerow with the requested id")
 		_, err := w.Write([]byte("no valuerow with the requested id"))
@@ -45,8 +42,6 @@ func Get(w http.ResponseWriter, r *http.Request) {
 	for i, key := range keyrow {
 		jsonmap[key] = valuerow[i]
 	}
-
-	log.Printf("jsonmap = %s", jsonmap)
 
 	data, err := json.Marshal(jsonmap)
 	if err != nil {
